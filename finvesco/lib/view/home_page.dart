@@ -1,4 +1,4 @@
-import 'package:finvesco/add_data.dart';
+import 'package:finvesco/view/add_data.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => Get.to(const AddData()),
+        onPressed: () => Get.to(AddData()),
       ),
       appBar: AppBar(
         backgroundColor: Colors.blue,

@@ -12,9 +12,9 @@ class AddDataController extends GetxController {
   }
 
   Future<void> addDataAll(UserModel value) async {
-    final resumeData = await Hive.openBox<UserModel>("student");
-    final resumeId = await resumeData.add(value);
-    value.id = resumeId;
+    final studentData = await Hive.openBox<UserModel>("student");
+    final studentId = await studentData.add(value);
+    value.id = studentId;
     modelProvider.add(value);
   }
 

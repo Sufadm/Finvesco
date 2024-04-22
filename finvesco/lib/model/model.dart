@@ -1,8 +1,8 @@
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
+part 'model.g.dart';
 
 @HiveType(typeId: 1)
-class UserModel extends HiveObject {
+class UserModel {
   @HiveField(0)
   int? id;
 
@@ -22,15 +22,15 @@ class UserModel extends HiveObject {
   final List<String> hobbies;
 
   @HiveField(6)
-  final bool darkMode;
+  final String photo;
 
   UserModel({
+    required this.photo,
     required this.name,
     required this.email,
     required this.gender,
     required this.qualification,
     required this.hobbies,
-    required this.darkMode,
     this.id,
   });
 }

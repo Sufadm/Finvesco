@@ -1,4 +1,5 @@
-import 'package:finvesco/home_page.dart';
+import 'package:finvesco/model/model.dart';
+import 'package:finvesco/view/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -9,6 +10,9 @@ void main() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDirectory.path);
   Hive.initFlutter();
+  if (!Hive.isAdapterRegistered(UserModelAdapter().typeId)) {
+    Hive.registerAdapter(UserModelAdapter());
+  }
   runApp(const MyApp());
 }
 
