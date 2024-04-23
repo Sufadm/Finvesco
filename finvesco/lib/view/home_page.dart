@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'package:finvesco/controller/service.dart';
-import 'package:finvesco/view/add_data.dart';
+import 'package:finvesco/controller/db_service.dart';
+import 'package:finvesco/view/data_add_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'list_details_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -13,6 +14,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Get.put(AddDataController());
     AddDataController().getAllData();
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
@@ -28,17 +30,25 @@ class HomePage extends StatelessWidget {
             if (datas.isEmpty) {
               return const Center(child: Text("No data"));
             }
-            return Expanded(
-              child: ListView.builder(
-                itemCount: datas.length,
-                itemBuilder: (context, index) {
-                  final data = datas[index];
-                  return Card(
+            return ListView.builder(
+              itemCount: datas.length,
+              itemBuilder: (context, index) {
+                final data = datas[index];
+                return GestureDetector(
+                  onTap: () => Get.to(StudentListDetailsPage(
+                      image: data.photo,
+                      name: data.name,
+                      email: data.email,
+                      gender: data.gender,
+                      qualification: data.qualification,
+                      languages: data.languages)),
+                  child: Card(
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundImage: FileImage(File(data.photo)),
                       ),
                       title: Text(data.name),
+                      subtitle: Text(data.email),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -54,19 +64,35 @@ class HomePage extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () {
-                              controller.delete(index);
+                              Get.defaultDialog(
+                                title: "Confirmation",
+                                content: const Text(
+                                  "Are you sure you want to delete this item?",
+                                ),
+                                textConfirm: "Delete",
+                                onConfirm: () {
+                                  controller.delete(index);
+                                  Get.back();
+                                  Get.snackbar(
+                                    datas[index].name,
+                                    "Removed",
+                                  );
+                                },
+                                textCancel: "Cancel",
+                                onCancel: () {},
+                              );
                             },
                           ),
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             );
           } catch (e) {
-            return Center(
-              child: Text("Error: $e"),
+            return const Center(
+              child: Text("Pls Try Again"),
             );
           }
         },

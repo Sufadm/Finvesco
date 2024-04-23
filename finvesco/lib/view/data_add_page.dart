@@ -1,9 +1,9 @@
-import 'package:finvesco/controller/service.dart';
+import 'package:finvesco/controller/db_service.dart';
+import 'package:finvesco/utils/const/sizedbox.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/data_add.dart';
+import '../controller/data_add_controller.dart';
 import '../model/model.dart';
-
 import 'dart:io';
 
 class AddData extends StatelessWidget {
@@ -11,15 +11,14 @@ class AddData extends StatelessWidget {
   final UserModel? editData;
 
   AddData({this.editData, super.key, this.index});
-
   final AddDataController controller = Get.put(AddDataController());
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final DataAdd dataController = Get.put(DataAdd());
 
   @override
   Widget build(BuildContext context) {
+    dataController.onClose();
+
     final bool isEditMode = editData != null;
     if (isEditMode) {
       dataController.image.value = File(editData!.photo);
@@ -27,14 +26,11 @@ class AddData extends StatelessWidget {
       dataController.email.value = editData!.email;
       dataController.gender.value = editData!.gender;
       dataController.qualification.value = editData!.qualification;
-      dataController.hobbies.assignAll(editData!.hobbies);
+      dataController.languages.assignAll(editData!.languages);
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(isEditMode ? 'Edit Data' : 'Add Data'),
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -94,8 +90,7 @@ class AddData extends StatelessWidget {
                   ),
                   onChanged: (value) => dataController.name.value = value,
                 ),
-                const SizedBox(height: 10),
-                // Email text field
+                height10, // Email text field
                 const Text(
                   "Email",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -118,8 +113,7 @@ class AddData extends StatelessWidget {
                   keyboardType: TextInputType.emailAddress,
                 ),
 
-                const SizedBox(height: 10),
-                // Gender selection
+                height10, // Gender selection
                 const Text(
                   "Gender",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -146,8 +140,7 @@ class AddData extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                // Qualification selection
+                height10, // Qualification selection
                 const Text(
                   "Qualification",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -159,7 +152,7 @@ class AddData extends StatelessWidget {
                       onChanged: (value) {
                         dataController.setQualification(value!);
                       },
-                      items: ['Select Qualification', 'Plus 2', 'Degree']
+                      items: ['Plus 2', 'Degree']
                           .map<DropdownMenuItem<String>>(
                             (value) => DropdownMenuItem<String>(
                               value: value,
@@ -170,21 +163,20 @@ class AddData extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                // Language selection
+                height10, // Language selection
                 const Text(
                   "Languages",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Wrap(
-                  children: ['Telugu ', 'English', 'Hindi'].map((hobby) {
+                  children: ['Telugu', 'English', 'Hindi'].map((hobby) {
                     return Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(hobby),
                         Obx(
                           () => Checkbox(
-                            value: dataController.hobbies.contains(hobby),
+                            value: dataController.languages.contains(hobby),
                             onChanged: (value) =>
                                 dataController.toggleHobby(hobby),
                           ),
@@ -193,8 +185,7 @@ class AddData extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: 10),
-                const Spacer(),
+                height10, const Spacer(),
                 // Submit button
                 SizedBox(
                   width: double.infinity,
@@ -209,7 +200,7 @@ class AddData extends StatelessWidget {
                           );
                           return;
                         }
-                        if (dataController.hobbies.isEmpty) {
+                        if (dataController.languages.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content:
@@ -224,14 +215,18 @@ class AddData extends StatelessWidget {
                           email: dataController.email.value,
                           gender: dataController.gender.value,
                           qualification: dataController.qualification.value,
-                          hobbies: dataController.hobbies.toList(),
+                          languages: dataController.languages.toList(),
                         );
                         if (isEditMode) {
                           await controller.editData(index!, user);
+                          Get.back();
+                          Get.snackbar("Success", "Data saved succesfully",
+                              snackPosition: SnackPosition.BOTTOM);
                         } else {
                           await controller.addDataAll(user);
-                          dataController.onClose();
                           Get.back();
+                          Get.snackbar("Success", "Data Added succesfully",
+                              snackPosition: SnackPosition.BOTTOM);
                         }
                       }
                     },

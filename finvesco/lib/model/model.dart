@@ -19,7 +19,7 @@ class UserModel {
   final String qualification;
 
   @HiveField(5)
-  final List<String> hobbies;
+  final List<String> languages;
 
   @HiveField(6)
   final String photo;
@@ -30,7 +30,7 @@ class UserModel {
     required this.email,
     required this.gender,
     required this.qualification,
-    required this.hobbies,
+    required this.languages,
     this.id,
   });
 }

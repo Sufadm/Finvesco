@@ -22,7 +22,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       email: fields[2] as String,
       gender: fields[3] as String,
       qualification: fields[4] as String,
-      hobbies: (fields[5] as List).cast<String>(),
+      languages: (fields[5] as List).cast<String>(),
       id: fields[0] as int?,
     );
   }
@@ -42,7 +42,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(4)
       ..write(obj.qualification)
       ..writeByte(5)
-      ..write(obj.hobbies)
+      ..write(obj.languages)
       ..writeByte(6)
       ..write(obj.photo);
   }

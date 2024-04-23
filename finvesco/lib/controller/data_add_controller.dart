@@ -8,14 +8,14 @@ class DataAdd extends GetxController {
   RxString email = ''.obs;
   RxString gender = RxString('Male');
   RxString qualification = RxString('Plus 2');
-  RxList<String> hobbies = <String>[].obs;
+  RxList<String> languages = <String>[].obs;
   Rx<File?> image = Rx<File?>(null);
 
   @override
   void onClose() {
     image.value = null;
     gender.value = '';
-    hobbies.clear();
+    languages.clear();
     super.onClose();
   }
 
@@ -24,10 +24,10 @@ class DataAdd extends GetxController {
   }
 
   void toggleHobby(String hobby) {
-    if (hobbies.contains(hobby)) {
-      hobbies.remove(hobby);
+    if (languages.contains(hobby)) {
+      languages.remove(hobby);
     } else {
-      hobbies.add(hobby);
+      languages.add(hobby);
     }
   }
 
@@ -52,6 +52,6 @@ class DataAdd extends GetxController {
     email.value = editData.email;
     gender.value = editData.gender;
     qualification.value = editData.qualification;
-    hobbies.assignAll(editData.hobbies);
+    languages.assignAll(editData.languages);
   }
 }
