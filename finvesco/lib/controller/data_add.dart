@@ -1,15 +1,23 @@
 import 'dart:io';
+import 'package:finvesco/model/model.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DataAdd extends GetxController {
-  RxString photo = ''.obs;
   RxString name = ''.obs;
   RxString email = ''.obs;
   RxString gender = RxString('Male');
   RxString qualification = RxString('Plus 2');
   RxList<String> hobbies = <String>[].obs;
   Rx<File?> image = Rx<File?>(null);
+
+  @override
+  void onClose() {
+    image.value = null;
+    gender.value = '';
+    hobbies.clear();
+    super.onClose();
+  }
 
   void toggleGender(String value) {
     gender.value = value;
@@ -27,15 +35,23 @@ class DataAdd extends GetxController {
     qualification.value = value;
   }
 
-  Future<void> pickImage() async {
-    try {
-      final pickedImage =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (pickedImage == null) return;
-      final imageFile = File(pickedImage.path);
-      image.value = imageFile;
-    } catch (e) {
-      print('Failed to pick image: $e');
+  Future<void> getPhoto() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      return;
+    } else {
+      final photoTemp = File(pickedFile.path);
+      image.value = photoTemp;
     }
+  }
+
+  void initEditData(UserModel editData) {
+    image.value = File(editData.photo);
+    name.value = editData.name;
+    email.value = editData.email;
+    gender.value = editData.gender;
+    qualification.value = editData.qualification;
+    hobbies.assignAll(editData.hobbies);
   }
 }

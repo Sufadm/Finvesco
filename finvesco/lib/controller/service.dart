@@ -16,11 +16,13 @@ class AddDataController extends GetxController {
     final studentId = await studentData.add(value);
     value.id = studentId;
     modelProvider.add(value);
+    update();
   }
 
   Future<void> getAllData() async {
     final dataDB = await Hive.openBox<UserModel>("student");
     modelProvider.assignAll(dataDB.values.toList());
+    update();
   }
 
   Future<void> editData(int id, UserModel value) async {
